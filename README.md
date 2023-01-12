@@ -1,2 +1,2 @@
-# sagittarius
-A learning project which represents a messenger applicatoin system
+# Welcome
+The readme file is in progress.
