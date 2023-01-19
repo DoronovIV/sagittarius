@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <BaseOutputPath>C:\Users\i.doronov\source\repos\sagittarius\sagittarius-solution\Common</BaseOutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include=".assets\enum\authorizer\EnumAssets.cs" />
+    <Compile Include=".assets\enum\client\EnumAssets.cs" />
+    <Compile Include=".assets\enum\messenger\EnumAssets.cs" />
+    <Compile Include=".assets\misc\StringAssets.cs" />
+    <Compile Include=".net\auxiliary\objects\common\ChatDTO.cs" />
+    <Compile Include=".net\auxiliary\objects\common\MessageDTO.cs" />
+    <Compile Include=".net\auxiliary\objects\common\NetworkingConfiguration.cs" />
+    <Compile Include=".net\auxiliary\objects\common\TcpClientController.cs" />
+    <Compile Include=".net\auxiliary\objects\common\UserClientPublicDTO.cs" />
+    <Compile Include=".net\auxiliary\objects\common\UserClientTechnicalDTO.cs" />
+    <Compile Include=".net\auxiliary\objects\common\UserServerSideDTO.cs" />
+    <Compile Include=".net\auxiliary\packs\IMessage.cs" />
+    <Compile Include=".net\auxiliary\packs\JsonMessageFactory.cs" />
+    <Compile Include=".net\auxiliary\packs\JsonMessagePackage.cs" />
+    <Compile Include=".net\auxiliary\packs\MessageParser.cs" />
+    <Compile Include=".net\auxiliary\processing\PackageBuilder.cs" />
+    <Compile Include=".net\auxiliary\processing\PackageReader.cs" />
+    <Compile Include=".net\config\IpEndPointDataAccessFactory.cs" />
+    <Compile Include=".net\config\NetworkConfiguration.cs" />
+    <Compile Include=".net\config\NetworkConfigurator.cs" />
+    <Compile Include=".style\authorizer\ConsoleServiceStyle.cs" />
+    <Compile Include=".style\common\ConsoleServiceStyleCommon.cs" />
+    <Compile Include=".style\messenger\ConsoleServiceStyle.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Toolbox">
+      <HintPath>Toolbox.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

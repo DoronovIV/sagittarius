@@ -1,0 +1,109 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <PackageIcon>client.png</PackageIcon>
+    <ApplicationIcon>client.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include=".client-model\ClientMessageTracker.cs" />
+    <Compile Include=".client-model\MessengerChat.cs" />
+    <Compile Include=".client-view-model\ClientLoginWindow\ClientLoginWindowViewModel.cs" />
+    <Compile Include=".client-view-model\ClientLoginWindow\ClientLoginWindowViewModelHandler.cs" />
+    <Compile Include=".client-view-model\ClientSignUpWindow\ClientSignUpWindowViewModel.cs" />
+    <Compile Include=".client-view-model\ClientSignUpWindow\ClientSignUpWindowViewModelHandler.cs" />
+    <Compile Include=".client-view-model\ReversedClientWindow\ClientMessengerWindowViewModel.cs" />
+    <Compile Include=".client-view-model\ReversedClientWindow\ClientMessengerWindowViewModelHandler.cs" />
+    <Compile Include=".client-view\App.xaml.cs" />
+    <Compile Include=".client-view\ClientLoginWindow.xaml.cs" />
+    <Compile Include=".client-view\ClientMessengerWindow.xaml.cs" />
+    <Compile Include=".client-view\ClientSignUpWindow.xaml.cs" />
+    <Compile Include=".local-service\ChatParser.cs" />
+    <Compile Include=".local-service\ClientMessageAdapter.cs" />
+    <Compile Include=".local-service\MessageEraser.cs" />
+    <Compile Include=".local-service\PasswordBoxAssistant.cs" />
+    <Compile Include=".local-service\WpfWindowsManager.cs" />
+    <Compile Include=".net\ClientTransmitter.cs" />
+    <Compile Include=".properties\dialogs\AttachFileDialogService.cs" />
+    <Compile Include=".properties\dialogs\IDialogService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include=".config\network-config.json" />
+    <Content Include=".log\client-log.txt" />
+    <Content Include="client.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ApplicationDefinition Include=".client-view\App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </ApplicationDefinition>
+    <Page Include=".client-view\ClientLoginWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".client-view\ClientMessengerWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".client-view\ClientSignUpWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\LoginTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\PasswordTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\PublicIdTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\RepeatPasswordTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\SendMessageTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\SignUpLoginTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include=".properties\SignUpPasswordTextBox.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Downloads\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Prism.Core" Version="8.1.97" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Common">
+      <HintPath>..\Common\Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Toolbox">
+      <HintPath>..\Common\Toolbox.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="client.ico">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Update="client.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  
+
+</Project>

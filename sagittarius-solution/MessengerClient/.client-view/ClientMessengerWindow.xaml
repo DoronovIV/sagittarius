@@ -1,0 +1,242 @@
+﻿<Window x:Class="MessengerClient.View.ClientMessengerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MessengerClient.View"
+        xmlns:footer="clr-namespace:MessengerClient.Properties"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"        
+        mc:Ignorable="d"
+        Title="{Binding WindowHeaderString}" Height="600" Width="750"
+        Closing="OnClosing"
+        >
+
+    <Grid Background="LightGray">
+
+
+        <!--#region Grid layout-->
+
+        <Grid.ColumnDefinitions>
+
+            <ColumnDefinition Width="*"/>
+
+            <ColumnDefinition Width="3*"/>
+
+        </Grid.ColumnDefinitions>
+
+
+
+        <Grid.RowDefinitions>
+
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <!--#endregion Grid layout-->
+
+
+
+        <!--#region Listviews-->
+
+        
+        <Grid Background="LightGray" Grid.Column="0" Margin="0,0,0,40">
+
+            <TabControl Margin="0,5,0,20" Background="Transparent">
+
+
+                <!--#region Chat ListView-->
+                
+                <TabItem Header="Chats">
+
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                            <TextBox Grid.Row="0"
+                            Text="{Binding ChatSearchString, UpdateSourceTrigger=PropertyChanged}"
+                            Margin="0,0,0,0" Padding="10,2,10,2" 
+                            materialDesign:HintAssist.Hint="Search"
+                        />
+
+                        <ListView   Grid.Row="1"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            ScrollViewer.CanContentScroll="True"
+                            VerticalContentAlignment="Top"
+                            BorderBrush="{x:Null}" Foreground="#E50A0A0A"
+                            Margin="0,0,0,0" FontFamily="Bookman Old Style"
+                            SelectedItem="{Binding ActiveChat}" Grid.Column="0"
+                            Background="Transparent" ItemsSource="{Binding ChatList}"
+                            Width="185" HorizontalAlignment="Left"
+                         >
+                            <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Margin="2">
+                                            <TextBlock 
+                                    TextWrapping="Wrap" Padding="2" 
+                                    Text="{Binding Path=Addressee.UserName, UpdateSourceTrigger=PropertyChanged}" 
+                                    MaxWidth="{Binding RelativeSource=
+                                    {RelativeSource AncestorType = {x:Type ListView}}, Path=ActualWidth}" 
+                                         />
+                                        </StackPanel>
+
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                        </ListView>
+                    </Grid>
+                </TabItem>
+                <!--#endregion Chat ListView-->
+
+                
+                
+                <!--#region Member ListView-->
+
+                <!--Height="{Binding RelativeSource=
+                            {RelativeSource AncestorType = {x:Type TabControl}}, Path=ActualHeight}"-->
+
+                <TabItem Header="Members" >
+                    
+                    <Grid>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBox Grid.Row="0"
+                            materialDesign:HintAssist.Hint="Search"
+                            Margin="0,0,0,0" Padding="10,2,10,2"
+                            Text="{Binding MemberSearchString, UpdateSourceTrigger=PropertyChanged}"
+                         />
+
+                        <!-- members list view -->
+
+
+                        <ListView  Grid.Row="1"
+                            BorderBrush="{x:Null}" Foreground="#E50A0A0A"
+                            Margin="0,0,0,10" FontFamily="Bookman Old Style"
+                            VerticalContentAlignment="Top"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Auto"
+                            Background="Transparent" ItemsSource="{Binding MemberList}"
+                            
+                            
+                            SelectedItem="{Binding SelectedOnlineMember}" Grid.Column="0"
+                         >
+
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="2">
+                                        <TextBlock 
+                                    TextWrapping="Wrap" Padding="2" 
+                                    Text="{Binding Path=UserName}" 
+                                    MaxWidth="{Binding RelativeSource=
+                                    {RelativeSource AncestorType = {x:Type ListView}}, Path=ActualWidth}" 
+                                        />
+                                    </StackPanel>
+
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+
+                        </ListView>
+
+                    </Grid>
+                </TabItem>
+
+                <!--#endregion Chat ListView-->
+
+
+            </TabControl>
+        </Grid>
+
+
+
+
+        <!--#region Chat Side -->
+
+        <Grid Background="LightSteelBlue" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+
+            <!--#region Message ListView -->
+            
+            <ListView  
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    Background="Transparent"
+                    SelectedItem="{Binding SelectedMessage}"
+                    ItemsSource="{Binding Path=ActiveChat.MessageList}" 
+                    Margin="0,5,5,50" BorderBrush="{x:Null}" 
+                    Foreground="#FF0A0A0A" FontFamily="Bookman Old Style"
+             >
+
+                <ListView.InputBindings>
+                    <KeyBinding Key="Delete" Command="{Binding DeleteMessageCommand}"/>
+                </ListView.InputBindings>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="2">
+                            <TextBlock 
+                                TextWrapping="Wrap" Padding="2" 
+                                Text="{Binding .}"                               
+                                MaxWidth="{Binding RelativeSource=
+                                {RelativeSource AncestorType = {x:Type ListView}}, Path=ActualWidth}" 
+                             />
+                        </StackPanel>
+
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+            </ListView>
+
+            <!--#endregion Message ListView -->
+
+
+            <TextBox 
+                    Margin="10,0,90,10" VerticalAlignment="Bottom"
+                    Text="{Binding Message}" Height="30"
+                    Style="{StaticResource SendMessageTextBox}"
+             />
+
+            <Button 
+                   VerticalAlignment="Bottom" HorizontalAlignment="Right"
+                   Margin="0,0,10,10"
+                   Content="Send" Command="{Binding SendMessageCommand}" 
+                   Height="30" Width="74"
+             />
+
+        </Grid>
+
+        <!--#endregion Chat Side -->
+        
+
+
+        <!-- log out button -->
+        <Button
+                Padding="2"
+                Background="LightSteelBlue"
+                HorizontalAlignment="Left" VerticalAlignment="Bottom"
+                Height="24" Width="24" Margin="10"
+                Command="{Binding LogoutCommand}"
+            
+         >
+
+            <materialDesign:PackIcon
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Width="24" Height="24" Margin="0" Kind="Logout"
+                Foreground="Black"
+                
+             />
+
+
+        </Button>
+
+
+
+    </Grid>
+
+</Window>
