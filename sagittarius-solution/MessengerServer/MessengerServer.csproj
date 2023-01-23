@@ -24,6 +24,7 @@
     <Compile Include=".service-model\entities\Chat.cs" />
     <Compile Include=".service-model\entities\Message.cs" />
     <Compile Include=".service-model\entities\User.cs" />
+    <Compile Include=".service-model\enums\UserRoles.cs" />
   </ItemGroup>
 
   <ItemGroup>
