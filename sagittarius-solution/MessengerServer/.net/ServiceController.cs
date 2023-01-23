@@ -302,9 +302,7 @@ namespace MessengerService.Datalink
 
                     newChat.MessageList.Add(newMessage);
                     newMessage.Chat = newChat;
-
                     context.Messages.Add(newMessage);
-
                     context.SaveChanges();
                 }
             }
