@@ -86,13 +86,9 @@ namespace MessengerService.LocalService
                     tempMessage.Author = complexChat.UserList.First(m => m.PublicId.Equals(message.Sender));
                     tempMessage.Date = message.Date;
                     tempMessage.Time = StringDateTime.FromThreeToTwoSections(message.Time);
-
                     tempMessage.Chat = complexChat;
-
                     tempMessage.Contents = message.Contents;
-
                     complexChat.MessageList.Add(tempMessage);
-
                     if (res.PublicId.Equals(tempMessage.Author.PublicId)) res.MessageList.Add(tempMessage);
                 }
                 res.ChatList.Add(complexChat);

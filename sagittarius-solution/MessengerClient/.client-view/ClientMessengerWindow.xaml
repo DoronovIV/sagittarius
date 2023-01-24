@@ -66,7 +66,7 @@
                             ScrollViewer.CanContentScroll="True"
                             VerticalContentAlignment="Top"
                             BorderBrush="{x:Null}" Foreground="#E50A0A0A"
-                            Margin="0,0,0,0" FontFamily="Bookman Old Style"
+                            Margin="0,0,0,0" FontFamily="Cascadia Code"
                             SelectedItem="{Binding ActiveChat}" Grid.Column="0"
                             Background="Transparent" ItemsSource="{Binding ChatList}"
                             Width="185" HorizontalAlignment="Left"
@@ -116,7 +116,7 @@
 
                         <ListView  Grid.Row="1"
                             BorderBrush="{x:Null}" Foreground="#E50A0A0A"
-                            Margin="0,0,0,10" FontFamily="Bookman Old Style"
+                            Margin="0,0,0,10" FontFamily="Cascadia Code"
                             VerticalContentAlignment="Top"
                             ScrollViewer.CanContentScroll="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -170,7 +170,7 @@
                     SelectedItem="{Binding SelectedMessage}"
                     ItemsSource="{Binding Path=ActiveChat.MessageList}" 
                     Margin="0,5,5,50" BorderBrush="{x:Null}" 
-                    Foreground="#FF0A0A0A" FontFamily="Bookman Old Style"
+                    Foreground="#FF0A0A0A" FontFamily="Cascadia Code"
              >
 
                 <ListView.InputBindings>

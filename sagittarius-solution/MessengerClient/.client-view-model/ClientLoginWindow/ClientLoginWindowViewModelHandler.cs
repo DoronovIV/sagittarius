@@ -39,10 +39,8 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
 
             if (!string.IsNullOrEmpty(_localUserTechnicalData.Password) && !string.IsNullOrEmpty(_localUserTechnicalData.Login))
             {
-                if (ServiceTransmitter.Disposed)
-                {
-                    ServiceTransmitter = new();
-                }
+                if (ServiceTransmitter.Disposed) ServiceTransmitter = new();
+                
                 try
                 {
                     bool isAuthorized = await ServiceTransmitter.ConnectAndAuthorize(_localUserTechnicalData);
