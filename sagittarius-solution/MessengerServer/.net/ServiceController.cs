@@ -271,33 +271,30 @@ namespace MessengerService.Datalink
                     newMessage.Time = package.GetTime();
 
                     // check if db knows the sender
-                    User newSender = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetSender()));
-                    if (newSender is null)
+                    User existingSender = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetSender()));
+                    if (existingSender is null)
                     {
-                        newSender = new(package, UserRoles.Sender);
-                        context.Users.Add(newSender);
+                        existingSender = new(package, UserRoles.Sender);
+                        context.Users.Add(existingSender);
                     }
-                    newMessage.Author = newSender;
+                    newMessage.Author = existingSender;
 
                     // check if db knows the reciever
-                    User newReciever = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetReciever()));
-                    if (newReciever is null)
+                    User existingReciever = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetReciever()));
+                    if (existingReciever is null)
                     {
-                        newReciever = new(package, UserRoles.Reciever);
-                        context.Users.Add(newReciever);
+                        existingReciever = new(package, UserRoles.Reciever);
+                        context.Users.Add(existingReciever);
                     }
 
                     // check if it isn't a new chat
-                    Chat newChat = context.Chats.FirstOrDefault(c => c.UserList.Contains(newSender) && c.UserList.Contains(newReciever) && c.UserList.Count == 2);
-                    if (package.GetReciever() != "@All")
+                    Chat newChat = context.Chats.FirstOrDefault(c => c.UserList.Contains(existingSender) && c.UserList.Contains(existingReciever));
+                    if (newChat is null)
                     {
-                        if (newChat is null)
-                        {
-                            newChat = new();
-                            newChat.UserList.Add(newSender);
-                            newChat.UserList.Add(newReciever);
-                            context.Chats.Add(newChat);
-                        }
+                        newChat = new();
+                        newChat.UserList.Add(existingSender);
+                        newChat.UserList.Add(existingReciever);
+                        context.Chats.Add(newChat);
                     }
 
                     newChat.MessageList.Add(newMessage);
