@@ -217,7 +217,7 @@ namespace MessengerService.Datalink
                     try
                     {
                         if (authorizer != null && authorizer.ClientSocket.Connected)
-                            if (reader is not null) // it is null
+                            if (reader is not null)
                             await Task.Run(() => msg = JsonMessageFactory.GetUnserializedPackage(reader.ReadJsonMessage()));
                     }
                     catch { /* Notofication exception */}
@@ -307,22 +307,12 @@ namespace MessengerService.Datalink
         /// </summary>
         public User GetUserFromDatabaseByLogin(string login)
         {
-            User res = null;
-
             using (MessengerDatabaseContext context = new())
             {
-                List<User> debugList = context.Users.Include(u => u.ChatList).Include(u => u.MessageList).ToList();
+                var res = context.Users.Include(u => u.ChatList).Include(u => u.MessageList).FirstOrDefault(u => u.Login.Equals(login));
 
-                foreach (var user in debugList)
-                {
-                    if (user.Login.Equals(login))
-                    {
-                        res = user;
-                        break;
-                    }
-                }
+                return res;
             }
-            return res;
         }
 
 
