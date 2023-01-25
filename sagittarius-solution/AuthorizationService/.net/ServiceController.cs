@@ -213,7 +213,7 @@ namespace AuthorizationServiceProject.Net
         /// </returns>
         public bool TryAddNewUser(UserClientTechnicalDTO user)
         {
-            bool doesContain = UserIsPresentInDatabase(user);
+            bool doesContain = IsUserPresentInDatabase(user);
             using (AuthorizationDatabaseContext context = new())
             {
                 if (!doesContain)
@@ -241,7 +241,7 @@ namespace AuthorizationServiceProject.Net
         /// <br />
         /// "True" - если данные совпадают, иначе "false".
         /// </returns>
-        public bool UserIsPresentInDatabase(UserClientTechnicalDTO user)
+        public bool IsUserPresentInDatabase(UserClientTechnicalDTO user)
         {
             bool doesContain = false;
             using (AuthorizationDatabaseContext context = new())
