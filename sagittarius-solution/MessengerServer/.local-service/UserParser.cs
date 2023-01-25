@@ -33,7 +33,6 @@ namespace MessengerService.LocalService
             UserServerSideDTO res = new();
 
             List<Chat> userSortedChatList = new();
-            SortChats(ref userSortedChatList);
 
             res.CurrentNickname = user.CurrentNickname;
             res.CurrentPublicId = user.PublicId;
@@ -99,42 +98,6 @@ namespace MessengerService.LocalService
 
 
         #endregion API - public Contract
-
-
-
-
-
-        #region LOGIC
-
-
-
-        /// <summary>
-        /// Sort messages in a user's chat list.
-        /// <br />
-        /// Отсортировать сообщения в списке чатов пользователя.
-        /// </summary>
-        private static void SortChats(ref List<Chat> sortedChatList)
-        {
-            foreach (Chat chat in sortedChatList)
-            {
-                chat.MessageList.Sort((Message A, Message B) =>
-                {
-                    if (Int32.Parse(StringDateTime.RemoveSeparation(A.Date)) > Int32.Parse(StringDateTime.RemoveSeparation(B.Date))) return 1;
-                    else if (Int32.Parse(StringDateTime.RemoveSeparation(A.Date)) < Int32.Parse(StringDateTime.RemoveSeparation(B.Date))) return -1;
-                    else
-                    {
-                        if (Int32.Parse(StringDateTime.RemoveSeparation(A.Time)) > Int32.Parse(StringDateTime.RemoveSeparation(B.Time))) return 1;
-                        else if (Int32.Parse(StringDateTime.RemoveSeparation(A.Time)) < Int32.Parse(StringDateTime.RemoveSeparation(B.Time))) return -1;
-                        else return 0;
-                    }
-                });
-            }
-        }
-
-
-
-        #endregion LOGIC
-
 
 
 
