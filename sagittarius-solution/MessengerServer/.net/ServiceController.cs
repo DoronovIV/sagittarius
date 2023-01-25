@@ -536,8 +536,8 @@ namespace MessengerService.Datalink
         /// </summary>
         private void SubscribeClientToEvents(ServiceReciever client)
         {
-            client.ProcessTextMessageEvent += AddNewMessageToTheDb;
-            client.ProcessTextMessageEvent += broadcaster.BroadcastMessage;
+            client.MessageRecievedEvent += AddNewMessageToTheDb;
+            client.MessageRecievedEvent += broadcaster.BroadcastMessage;
             client.UserDisconnected += broadcaster.BroadcastDisconnect;
             client.MessageDeletedEvent += DeleteMessageFromDb;
             client.MessageDeletedEvent += broadcaster.BroadcastMessageDeletion;

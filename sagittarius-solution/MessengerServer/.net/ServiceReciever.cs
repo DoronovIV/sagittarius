@@ -69,9 +69,10 @@ namespace MessengerService.Datalink
 
         public delegate void MessageTypeDelegate(JsonMessagePackage recievedMessage);
 
-        public event MessageTypeDelegate ProcessTextMessageEvent;
+        public event MessageTypeDelegate MessageRecievedEvent;
 
         public event MessageTypeDelegate MessageDeletedEvent;
+
 
         public delegate void UserTypeDelegate(User userData);
 
@@ -107,7 +108,7 @@ namespace MessengerService.Datalink
                         case EnumAssets.MessageReceipt:
 
                             var textMessage = packetReader.ReadJsonMessage();
-                            ProcessTextMessageEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessage));
+                            MessageRecievedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessage));
                             AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageReceiptStyle(JsonMessageFactory.GetUnserializedPackage(textMessage))));
 
                             break;
@@ -120,13 +121,12 @@ namespace MessengerService.Datalink
                             try
                             {
                                 MessageDeletedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion));
+                                AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageDeletionStyle(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion))));
                             }
                             catch (InvalidDataException e)
                             {
                                 AnsiConsole.Write(new Markup($"[black on white][[{StringAssets.TimeSecondFormat}]] [/][red on white]Error 501. {e.GetType().Name} on message deletion.[/]"));
                             }
-
-                            AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageDeletionStyle(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion))));
 
                             break;
 

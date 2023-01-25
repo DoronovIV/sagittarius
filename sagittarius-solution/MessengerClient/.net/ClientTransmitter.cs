@@ -407,7 +407,7 @@ namespace Net.Transmition
                 }
                 catch (Exception e)
                 {
-                    File.WriteAllText(@"..\..\..\.log\client-log.txt", $"\n{StringAssets.DateFormat}\t{StringAssets.TimeMillisecondFormat} Exception at client transmitter, Unit 'ReadPacketsAsync' block 'try'.\nException: {e.Message}\n{e.StackTrace}\n");
+                    File.WriteAllText(@"..\..\..\.log\client-log.txt", $"\n{StringAssets.DateFormat}  {StringAssets.TimeMillisecondFormat} Exception at client transmitter, Unit 'ReadPacketsAsync' block 'try', notification exception.\nException: {e.Message}\n{e.StackTrace}\n");
                 }
                 finally
                 {

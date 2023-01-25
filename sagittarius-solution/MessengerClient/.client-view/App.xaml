@@ -11,13 +11,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <materialDesign:BundledTheme BaseTheme="Light" PrimaryColor="Indigo" SecondaryColor="Blue"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
-                <ResourceDictionary Source="../.properties/LoginTextBox.xaml"/>
-                <ResourceDictionary Source="../.properties/PasswordTextBox.xaml"/>
-                <ResourceDictionary Source="../.properties/RepeatPasswordTextBox.xaml"/>
                 <ResourceDictionary Source="../.properties/SendMessageTextBox.xaml"/>
-                <ResourceDictionary Source="../.properties/PublicIdTextBox.xaml"/>
-                <ResourceDictionary Source="../.properties/SignUpLoginTextBox.xaml"/>
-                <ResourceDictionary Source="../.properties/SignUpPasswordTextBox.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

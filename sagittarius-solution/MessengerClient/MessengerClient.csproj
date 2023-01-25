@@ -51,25 +51,7 @@
     <Page Include=".client-view\ClientSignUpWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include=".properties\LoginTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include=".properties\PasswordTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include=".properties\PublicIdTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include=".properties\RepeatPasswordTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include=".properties\SendMessageTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include=".properties\SignUpLoginTextBox.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include=".properties\SignUpPasswordTextBox.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
