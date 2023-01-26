@@ -29,15 +29,6 @@ namespace Net.Transmition
 
 
         /// <summary>
-        /// An instance that serves as a flag for client windows changing.
-        /// <br />
-        /// Объект, который служит для перемещения между окнами клиента.
-        /// </summary>
-        private static CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
-
-
-
-        /// <summary>
         /// Provides client connections fo the authorization service;
         /// <br />
         /// Предоставляет клиенские подключения для сервиса авторизации;
@@ -195,7 +186,7 @@ namespace Net.Transmition
             //Если клиент не подключен
             if (!authorizationSocket.Connected)
             {
-                await authorizationSocket.ConnectAsync(remoteEP: NetworkConfigurator.ClientAuthorizerEndPoint, cancellationToken: new CancellationTokenSource(1500).Token);
+                await authorizationSocket.ConnectAsync(remoteEP: NetworkConfigurator.ClientAuthorizerEndPoint, cancellationToken: new CancellationTokenSource(NetworkConfigurator.ConnectionTimeoutValue).Token);
             }
 
             _authorizationPacketReader = new(authorizationSocket.GetStream());
@@ -230,14 +221,14 @@ namespace Net.Transmition
         {
             try
             {
-                await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(1500).Token);
+                await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(NetworkConfigurator.ConnectionTimeoutValue).Token);
             }
             catch (Exception exSocketObsolete)
             {
                 try 
                 { 
                     messengerSocket = new();
-                    await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(1500).Token);
+                    await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(NetworkConfigurator.ConnectionTimeoutValue).Token);
                 }
                 catch (Exception exServiceDown)
                 {
@@ -272,8 +263,6 @@ namespace Net.Transmition
         {
             if (authorizationSocket.Connected)
             {
-                cancellationTokenSource.Cancel();
-
                 messengerSocket.Close();
 
                 currentUserDisconnectEvent?.Invoke();

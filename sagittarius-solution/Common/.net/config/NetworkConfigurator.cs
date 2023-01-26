@@ -102,6 +102,24 @@ namespace Common.Net.Config
 
 
 
+        #region ASSETS
+
+
+
+        /// <summary>
+        /// Time span in milliseconds after which the async connection operation will be cancelled.
+        /// <br />
+        /// Временной промежуток в миллисекундах, после которого операция асинхронного подключения будет отменена.
+        /// </summary>
+        public static readonly int ConnectionTimeoutValue = 1500;
+
+
+
+        #endregion ASSETS
+
+
+
+
         #region AUXILIARY
 
 
