@@ -113,7 +113,7 @@ namespace Net.Transmition
         /// <br />
         /// Событие получения сообщения;
         /// </summary>
-        public event Action msgReceivedEvent;
+        public event Action messageReceivedEvent;
 
         /// <summary>
         /// When current user decides to delete their message.
@@ -121,13 +121,6 @@ namespace Net.Transmition
         /// Когда некий пользователь решает удалить своё сообщение.
         /// </summary>
         public event Action mesageDeletedEvent;
-
-        /// <summary>
-        /// Other user disconnection event;
-        /// <br />
-        /// Событие отключения другого пользователя;
-        /// </summary>
-        public event Action otherUserDisconnectEvent;
 
         /// <summary>
         /// Current user disconnection event.
@@ -412,7 +405,7 @@ namespace Net.Transmition
                                 break;
 
                             case EnumAssets.MessageRecieved:
-                                msgReceivedEvent?.Invoke(); // message recieved;
+                                messageReceivedEvent?.Invoke(); // message recieved;
                                 break;
 
                             case EnumAssets.MessageDeletionRequest:
@@ -420,7 +413,7 @@ namespace Net.Transmition
                                 break;
 
                             case EnumAssets.ContactDisconnection:
-                                otherUserDisconnectEvent?.Invoke(); // client disconnection;
+                                // this will be the notch for the online/offline markup system;
                                 break;
 
                             case EnumAssets.ServerShutdown:

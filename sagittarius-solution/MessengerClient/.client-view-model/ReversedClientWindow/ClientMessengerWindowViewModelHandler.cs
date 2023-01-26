@@ -74,23 +74,6 @@ namespace MessengerClient.ViewModel.ClientChatWindow
 
 
         /// <summary>
-        /// Remove a user from the client list;
-        /// <br />
-        /// Удалить пользователя из списка клиентов;
-        /// </summary>
-        private void RemoveUser()
-        {
-            var msg = _serviceTransmitter.MessengerPacketReader.ReadJsonMessage();
-            var deserializedMessage = JsonConvert.DeserializeObject<JsonMessagePackage>(msg);
-            var uid = deserializedMessage.GetMessage();
-            var user = DefaultCommonMemberList.Where(x => x.PublicId.Equals(uid)).FirstOrDefault();
-
-            // foreach (var user in )
-            Application.Current.Dispatcher.Invoke(() => DefaultCommonMemberList.Remove(user));   // removing disconnected user;
-        }
-
-
-        /// <summary>
         /// Make all actions needed for the ui side.
         /// <br />
         /// Выполнить все необходимые со стороные UI действия.
