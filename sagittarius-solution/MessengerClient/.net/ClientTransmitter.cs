@@ -195,7 +195,7 @@ namespace Net.Transmition
             //Если клиент не подключен
             if (!authorizationSocket.Connected)
             {
-                await authorizationSocket.ConnectAsync(NetworkConfigurator.ClientAuthorizerEndPoint);
+                await authorizationSocket.ConnectAsync(remoteEP: NetworkConfigurator.ClientAuthorizerEndPoint, cancellationToken: new CancellationTokenSource(1500).Token);
             }
 
             _authorizationPacketReader = new(authorizationSocket.GetStream());
@@ -226,18 +226,18 @@ namespace Net.Transmition
         /// <br />
         /// "Технический" DTO пользователя, содержащий его личную информацию.
         /// </param>
-        public bool ConnectAndSendLoginToService(UserClientTechnicalDTO user)
+        public async Task<bool> ConnectAndSendLoginToService(UserClientTechnicalDTO user)
         {
             try
             {
-                messengerSocket.Connect(NetworkConfigurator.ClientMessengerEndPoint);
+                await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(1500).Token);
             }
             catch (Exception exSocketObsolete)
             {
                 try 
                 { 
                     messengerSocket = new();
-                    messengerSocket.Connect(NetworkConfigurator.ClientMessengerEndPoint);
+                    await messengerSocket.ConnectAsync(NetworkConfigurator.ClientMessengerEndPoint, new CancellationTokenSource(1500).Token);
                 }
                 catch (Exception exServiceDown)
                 {

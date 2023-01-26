@@ -318,26 +318,21 @@ namespace MessengerClient.ViewModel.ClientChatWindow
 
             oldMessage = someChat.MessageList.Select(m => m).Where(m => (m.Contains(msg.GetSender()) && m.Contains(msg.GetMessage() as string) && !m.Contains("✓✓"))).FirstOrDefault();
             if (oldMessage is not null)
-            {
                 newMessage = oldMessage + "✓";
-            }
             else
                 if (msg.GetSender().Equals(acceptedUserData.CurrentPublicId))
                     Application.Current.Dispatcher.Invoke(() => someChat.AddOutgoingMessage((msg.GetMessage() as string) + " ✓✓"));
-                else Application.Current.Dispatcher.Invoke(() => someChat.AddIncommingMessage(msg.GetMessage() as string));
+                else 
+                    Application.Current.Dispatcher.Invoke(() => someChat.AddIncommingMessage(msg.GetMessage() as string));
 
 
             ObservableCollection<string> newMessageList = new();
             foreach (string message in someChat.MessageList)
             {
                 if (!message.Equals(oldMessage))
-                {
                     newMessageList.Add(message);
-                }
                 else
-                {
                     newMessageList.Add(newMessage);
-                }
             }
             someChat.MessageList = newMessageList;
 

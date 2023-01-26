@@ -8,6 +8,7 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
     {
 
 
+
         #region HANDLING
 
 
@@ -39,14 +40,32 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
 
             if (!string.IsNullOrEmpty(_localUserTechnicalData.Password) && !string.IsNullOrEmpty(_localUserTechnicalData.Login))
             {
-                if (ServiceTransmitter.Disposed) ServiceTransmitter = new();
+                if (ServiceTransmitter.Disposed) RenewTransmitter();
                 
                 try
                 {
-                    bool isAuthorized = await ServiceTransmitter.ConnectAndAuthorize(_localUserTechnicalData);
-                    if (isAuthorized)
+                    bool isAuthorized = default, isAuthorizerDown = default;
+
+                    try
                     {
-                        if (ServiceTransmitter.ConnectAndSendLoginToService(_localUserTechnicalData))
+                        isAuthorized = await ServiceTransmitter.ConnectAndAuthorize(_localUserTechnicalData);
+                    }
+                    catch 
+                    {
+                        isAuthorizerDown = true;
+                    }
+                    if (isAuthorized && !isAuthorizerDown)
+                    {
+                        bool isLoginSentToService = default;
+                        try
+                        {
+                            isLoginSentToService = await ServiceTransmitter.ConnectAndSendLoginToService(_localUserTechnicalData);
+                        }
+                        catch
+                        {
+                            // timeout notification exception, handled on the lower level
+                        }
+                        if (isLoginSentToService)
                         {
                             var result = ServiceTransmitter.GetResponseData();
                             FullUserServiceData = result.userData;
@@ -57,25 +76,13 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
                     }
                     else
                     {
-                        MessageBox.Show("Authorization failed due to the incurrect data input.", "Please, check your input", MessageBoxButton.OK, MessageBoxImage.Hand);
+                        MessageBox.Show("Server is down. Please, concider connecting later.", "Server down", MessageBoxButton.OK, MessageBoxImage.Information);
+                        RenewTransmitter();
                     }
                 }
                 catch (Exception ex)
                 {
-                    var nullReferenceCheck = Application.Current?.MainWindow?.Name;
-                    if (nullReferenceCheck is not null)
-                    {
-                        if (Application.Current.MainWindow.Name.Equals(nameof(ClientMessengerWindow)))
-                        {
-                            var vmRef = Application.Current.MainWindow.DataContext as ClientMessengerWindowViewModel;
-
-                            if (!vmRef.AlreadyDisconnected)
-                            {
-                                MessageBox.Show("Server is down. Please, concider connecting later.", "Server down", MessageBoxButton.OK, MessageBoxImage.Information);
-                                WpfWindowsManager.MoveFromChatToLogin(LocalUserTechnicalData.Login);
-                            }
-                        }
-                    }
+                    BeginDisconnection();
                 }
             }
             else
@@ -104,14 +111,65 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
         /// <br />
         /// Метод для дебага.
         /// </summary>
-        private void ShowErrorMessage(string message)
+        private void ShowNotificationMessage(string message)
         {
-            MessageBox.Show($"{message}", "Error", MessageBoxButton.OK, MessageBoxImage.Stop);
+            MessageBox.Show($"{message}", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+
+
+
+        /// <summary>
+        /// Start disconnection procedure.
+        /// <br />
+        /// Начать процедуру дисконнекта.
+        /// </summary>
+        private void BeginDisconnection()
+        {
+            var nullReferenceCheck = Application.Current?.MainWindow?.Name;
+            if (nullReferenceCheck is not null)
+            {
+                if (Application.Current.MainWindow.Name.Equals(nameof(ClientMessengerWindow)))
+                {
+                    var vmRef = Application.Current.MainWindow.DataContext as ClientMessengerWindowViewModel;
+
+                    if (!vmRef.AlreadyDisconnected)
+                    {
+                        MessageBox.Show("Server is down. Please, concider connecting later.", "Server down", MessageBoxButton.OK, MessageBoxImage.Information);
+                        WpfWindowsManager.MoveFromChatToLogin(LocalUserTechnicalData.Login);
+                    }
+                }
+            }
         }
 
 
 
         #endregion HANDLING
+
+
+
+
+
+        #region LOGIC
+
+
+
+        /// <summary>
+        /// Renew the transmitter instance.
+        /// <br />
+        /// Обновить экземпляр трансмиттера.
+        /// </summary>
+        private void RenewTransmitter()
+        {
+            ServiceTransmitter.Dispose();
+            ServiceTransmitter = new();
+            serviceTransmitter.SendOutput += this.ShowNotificationMessage;
+        }
+
+
+
+        #endregion LOGIC
+
 
 
     }

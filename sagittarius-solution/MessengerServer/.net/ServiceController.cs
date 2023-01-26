@@ -265,7 +265,7 @@ namespace MessengerService.Datalink
                     newMessage.Time = package.GetTime();
 
                     // check if db knows the sender
-                    User existingSender = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetSender()));
+                    User? existingSender = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetSender()));
                     if (existingSender is null)
                     {
                         existingSender = new(package, UserRoles.Sender);
@@ -274,7 +274,7 @@ namespace MessengerService.Datalink
                     newMessage.Author = existingSender;
 
                     // check if db knows the reciever
-                    User existingReciever = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetReciever()));
+                    User? existingReciever = context.Users.FirstOrDefault(u => u.PublicId.Equals(package.GetReciever()));
                     if (existingReciever is null)
                     {
                         existingReciever = new(package, UserRoles.Reciever);
@@ -282,7 +282,7 @@ namespace MessengerService.Datalink
                     }
 
                     // check if it isn't a new chat
-                    Chat newChat = context.Chats.FirstOrDefault(c => c.UserList.Contains(existingSender) && c.UserList.Contains(existingReciever));
+                    Chat? newChat = context.Chats.FirstOrDefault(c => c.UserList.Contains(existingSender) && c.UserList.Contains(existingReciever));
                     if (newChat is null)
                     {
                         newChat = new();
@@ -309,7 +309,9 @@ namespace MessengerService.Datalink
         {
             using (MessengerDatabaseContext context = new())
             {
-                var res = context.Users.Include(u => u.ChatList).Include(u => u.MessageList).FirstOrDefault(u => u.Login.Equals(login));
+                List<User> userList = context.Users.Include(u => u.ChatList).Include(u => u.MessageList).ToList();
+
+                var res = userList.FirstOrDefault(u => u.Login.Equals(login)) ?? throw new NullReferenceException("[Manual] User login not found in database.");
 
                 return res;
             }
@@ -334,10 +336,7 @@ namespace MessengerService.Datalink
                 {
                     foreach (var messageIntem in user.MessageList)
                     {
-                        var time1 = messageIntem.GetTime();
-                        var time2 = message.GetTime();
-                        bool areMessagesEqual = MessageParser.IsMessageIdenticalToAnotherOne(messageIntem, message);
-                        if (areMessagesEqual)
+                        if (MessageParser.IsMessageIdenticalToAnotherOne(messageIntem, message))
                         {
                             messageToDelete = messageIntem;
                             deletedMessageAuthorId = user.Id;
@@ -350,7 +349,6 @@ namespace MessengerService.Datalink
                 }
 
                 
-
                 if (messageToDelete is not null)
                 {
                     var chatContainingMessageToDelete = context.Chats.Select(c => c).Where(c => c.MessageList.Contains(messageToDelete)).FirstOrDefault();

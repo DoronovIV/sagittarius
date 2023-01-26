@@ -1,5 +1,6 @@
 ﻿using Common.Objects.Common;
 using Net.Transmition;
+using System.Threading;
 
 namespace MessengerClient.ViewModel.ClientStartupWindow
 {
@@ -118,7 +119,7 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
             _localUserTechnicalData = new UserClientTechnicalDTO();
 
             serviceTransmitter = new();
-            serviceTransmitter.SendOutput += ShowErrorMessage;
+            serviceTransmitter.SendOutput += ShowNotificationMessage;
 
             SignInCommand = new(OnSignInButtonClick);
             SignUpCommand = new(OnSignUpButtonClick);
