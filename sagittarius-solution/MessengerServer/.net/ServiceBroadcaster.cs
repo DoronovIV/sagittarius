@@ -8,12 +8,14 @@
     public class ServiceBroadcaster
     {
 
+
         /// <summary>
         /// A reference to the service controller instance.
         /// <br />
         /// Ссылка на экземпляр объекта класса "ServiceController".
         /// </summary>
         private ServiceController controllerReference;
+
 
 
 
@@ -30,6 +32,8 @@
         public void BroadcastConnection()
         {
             var broadcastPacket = new PackageBuilder();
+
+            ValidateControllerUserList();
             foreach (var user in controllerReference.UserList)
             {
                 foreach (var usr in controllerReference.UserList)
@@ -57,16 +61,14 @@
             msgPacket.WriteOpCode(5);
             //msgPacket.WritePackageLength(package);
             msgPacket.WriteJsonMessage(JsonMessageFactory.GetSerializedMessage(package));
+
+            ValidateControllerUserList();
             foreach (var user in controllerReference.UserList)
             {
-                if (package.Reciever != "@All")
+                if (user.CurrentUser.PublicId.Equals(package.Reciever) || user.CurrentUser.PublicId.Equals(package.Sender))
                 {
-                    if (user.CurrentUser.PublicId == package.Reciever || user.CurrentUser.PublicId == package.Sender)
-                    {
-                        user.ClientSocket.Client.Send(msgPacket.GetPacketBytes(), SocketFlags.Partial);
-                    }
+                    user.ClientSocket.Client.Send(msgPacket.GetPacketBytes(), SocketFlags.Partial);
                 }
-                else user.ClientSocket.Client.Send(msgPacket.GetPacketBytes(), SocketFlags.Partial);
             }
         }
 
@@ -83,15 +85,12 @@
         /// </param>
         public void BroadcastDisconnect(User userData)
         {
-            // removing disconnected user from collection;
-            var disconnectedUser = controllerReference.UserList.Where(x => x.CurrentUser.PublicId.Equals(userData.PublicId)).FirstOrDefault();
-            controllerReference.UserList.Remove(disconnectedUser);
-
             // write notification message;
             var broadcastPacket = new PackageBuilder();
             broadcastPacket.WriteOpCode(10);    // on userData disconnection, _service recieves the code-10 operation and broadcasts the "disconnect message";  
             broadcastPacket.WriteJsonMessage(JsonMessageFactory.GetJsonMessageSimplified(userData.PublicId, "Everyone", userData.PublicId)); // it also sends disconnected userData id;
 
+            ValidateControllerUserList();
             // send notification to everyone;
             foreach (var user in controllerReference.UserList)
             {
@@ -113,6 +112,7 @@
             builder.WriteJsonMessage(JsonMessageFactory.GetSerializedMessage(message));
             var specificChatUsers = controllerReference.UserList.Where(u => u.CurrentUser.PublicId.Equals(message.Sender) || u.CurrentUser.PublicId.Equals(message.Reciever));
 
+            ValidateControllerUserList();
             foreach (var user in specificChatUsers)
             {
                 user.ClientSocket.Client.Send(builder.GetPacketBytes());
@@ -129,6 +129,7 @@
         {
             PackageBuilder builder = new();
             builder.WriteOpCode(byte.MaxValue);
+            ValidateControllerUserList();
             foreach (var user in controllerReference.UserList)
             {
                 user.ClientSocket.Client.Send(builder.GetPacketBytes());
@@ -138,6 +139,37 @@
 
 
         #endregion API - public  Contract
+
+
+
+
+
+
+        #region LOGIC
+
+
+
+        /// <summary>
+        /// Check the list of users and remove the disconnected ones.
+        /// <br />
+        /// Проверить список пользователей и удалить неподключённых.
+        /// </summary>
+        private void ValidateControllerUserList()
+        {
+            List<ServiceReciever> newList = new();
+            foreach (var user in controllerReference.UserList)
+            {
+                if (user.ClientSocket.Client is not null)
+                    newList.Add(user);
+            }
+            controllerReference.UserList = newList;
+        }
+
+
+
+        #endregion LOGIC
+
+
 
 
 

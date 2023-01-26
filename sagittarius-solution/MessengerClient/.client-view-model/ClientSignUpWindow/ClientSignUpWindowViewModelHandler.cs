@@ -45,7 +45,7 @@ namespace MessengerClient.ViewModel.ClientSignUpWindow
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Service is down. Consider register later.", "Unable to sign up", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Service is down. Consider register later.", "Unable to sign up", MessageBoxButton.OK, MessageBoxImage.Hand);
             }
         }
 
