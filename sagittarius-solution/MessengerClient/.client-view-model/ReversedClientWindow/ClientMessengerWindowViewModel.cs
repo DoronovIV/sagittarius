@@ -531,7 +531,8 @@ namespace MessengerClient.ViewModel.ClientChatWindow
             _serviceTransmitter = clientSocket;
             _serviceTransmitter.connectedEvent += ConnectUser;                                                       // user connection;
             _serviceTransmitter.mesageDeletedEvent += DeleteCurrentClientMessageAfterServiceRespond;                 // current user message deletion;
-            _serviceTransmitter.messageReceivedEvent += RecieveMessage;                                                  // message receipt;
+            _serviceTransmitter.messageReceivedEvent += RceiveMessage;                                               // message receipt;
+            _serviceTransmitter.otherUserDisconnectEvent += RemoveUser;                                              // other user disconnection;
             _serviceTransmitter.currentUserDisconnectEvent += DisconnectFromService;                                 // current user disconnection;
 
             // may be obsolete. tests needed;

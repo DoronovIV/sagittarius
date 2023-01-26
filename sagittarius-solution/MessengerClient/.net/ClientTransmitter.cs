@@ -123,6 +123,13 @@ namespace Net.Transmition
         public event Action mesageDeletedEvent;
 
         /// <summary>
+        /// Other user disconnection event;
+        /// <br />
+        /// Событие отключения другого пользователя;
+        /// </summary>
+        public event Action otherUserDisconnectEvent;
+
+        /// <summary>
         /// Current user disconnection event.
         /// <br />
         /// Событие отключение текущего пользователя.
@@ -413,7 +420,7 @@ namespace Net.Transmition
                                 break;
 
                             case EnumAssets.ContactDisconnection:
-                                // this will be the notch for the online/offline markup system;
+                                otherUserDisconnectEvent?.Invoke(); // client disconnection;
                                 break;
 
                             case EnumAssets.ServerShutdown:
