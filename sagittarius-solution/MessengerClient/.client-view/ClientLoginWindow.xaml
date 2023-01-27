@@ -12,19 +12,23 @@
         Closing="OnClosing">
     <Grid>
 
-        <TextBox
+        <TextBox MaxLength="16"
                 HorizontalAlignment="Center" VerticalAlignment="Top"
                 Margin="0,100,0,0" Padding ="3" Height="25" Width="120"
                 materialDesign:HintAssist.Hint="Login" TextWrapping="Wrap" 
             
             Text="{Binding LocalUserTechnicalData.Login}" 
             Style="{DynamicResource MaterialDesignOutlinedTextBox}"
-         />
+         >
+            <materialDesign:TextFieldAssist.CharacterCounterStyle>
+                <Style TargetType="TextBlock"/>
+            </materialDesign:TextFieldAssist.CharacterCounterStyle>
+        </TextBox>
 
 
-        <PasswordBox  
+        <PasswordBox  MaxLength="16"
                     HorizontalAlignment="Center" VerticalAlignment="Top" 
-                    Margin="0,145,0,0" Padding="3" MaxLength="16"
+                    Margin="0,145,0,0" Padding="3"
                     Height="25" Width="120" FontSize="14" 
                     materialDesign:HintAssist.Hint="Password"
             
