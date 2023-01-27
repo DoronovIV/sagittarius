@@ -38,14 +38,14 @@
 
         <!--#region Listviews-->
 
-        
+
         <Grid Background="LightGray" Grid.Column="0" Margin="0,0,0,40">
 
             <TabControl Margin="0,5,0,20" Background="Transparent">
 
 
                 <!--#region Chat ListView-->
-                
+
                 <TabItem Header="Chats">
 
                     <Grid>
@@ -55,11 +55,16 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                            <TextBox Grid.Row="0"
-                            Text="{Binding ChatSearchString, UpdateSourceTrigger=PropertyChanged}"
-                            Margin="0,0,0,0" Padding="10,2,10,2" 
+                        <TextBox 
+                            Margin="0,0,0,0" Padding="10,6,10,2" 
                             materialDesign:HintAssist.Hint="Search"
-                        />
+                            Grid.Row="0" MaxLength="20" FontFamily="Cascadia Code"
+                            Text="{Binding ChatSearchString, UpdateSourceTrigger=PropertyChanged}"
+                        >
+                            <materialDesign:TextFieldAssist.CharacterCounterStyle>
+                                <Style TargetType="TextBlock"/>
+                            </materialDesign:TextFieldAssist.CharacterCounterStyle>
+                        </TextBox>
 
                         <ListView   Grid.Row="1"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
@@ -72,58 +77,64 @@
                             Width="185" HorizontalAlignment="Left"
                          >
                             <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Horizontal" Margin="2">
-                                            <TextBlock 
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal" Margin="2">
+                                        <TextBlock 
                                     TextWrapping="Wrap" Padding="2" 
                                     Text="{Binding Path=Addressee.UserName, UpdateSourceTrigger=PropertyChanged}" 
                                     MaxWidth="{Binding RelativeSource=
                                     {RelativeSource AncestorType = {x:Type ListView}}, Path=ActualWidth}" 
                                          />
-                                        </StackPanel>
+                                    </StackPanel>
 
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
                         </ListView>
                     </Grid>
                 </TabItem>
                 <!--#endregion Chat ListView-->
 
-                
-                
+
+
                 <!--#region Member ListView-->
 
                 <!--Height="{Binding RelativeSource=
                             {RelativeSource AncestorType = {x:Type TabControl}}, Path=ActualHeight}"-->
 
                 <TabItem Header="Members" >
-                    
+
                     <Grid>
+
 
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
-                        <TextBox Grid.Row="0"
+                        <TextBox
+                            FontFamily="Cascadia Code"
+                            Grid.Row="0" MaxLength="24"
                             materialDesign:HintAssist.Hint="Search"
-                            Margin="0,0,0,0" Padding="10,2,10,2"
+                            Margin="0,0,0,0" Padding="10,6,10,2"
                             Text="{Binding MemberSearchString, UpdateSourceTrigger=PropertyChanged}"
-                         />
+                         >
+                            <materialDesign:TextFieldAssist.CharacterCounterStyle>
+                                <Style TargetType="TextBlock"/>
+                            </materialDesign:TextFieldAssist.CharacterCounterStyle>
+                        </TextBox>
 
                         <!-- members list view -->
 
 
                         <ListView  Grid.Row="1"
-                            BorderBrush="{x:Null}" Foreground="#E50A0A0A"
-                            Margin="0,0,0,10" FontFamily="Cascadia Code"
+                            BorderBrush="{x:Null}" Foreground="#E50A0A0A" FontFamily="Cascadia Code"
                             VerticalContentAlignment="Top"
                             ScrollViewer.CanContentScroll="True"
                             ScrollViewer.VerticalScrollBarVisibility="Auto"
                             Background="Transparent" ItemsSource="{Binding MemberList}"
                             
                             
-                            SelectedItem="{Binding SelectedOnlineMember}" Grid.Column="0"
+                            SelectedItem="{Binding SelectedOnlineMember}" Grid.Column="0" Grid.ColumnSpan="2"
                          >
 
                             <ListView.ItemTemplate>
@@ -163,7 +174,7 @@
 
 
             <!--#region Message ListView -->
-            
+
             <ListView  
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                     Background="Transparent"
@@ -212,7 +223,7 @@
         </Grid>
 
         <!--#endregion Chat Side -->
-        
+
 
 
         <!-- log out button -->
