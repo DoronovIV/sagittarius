@@ -54,29 +54,36 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
                     {
                         isAuthorizerDown = true;
                     }
-                    if (isAuthorized && !isAuthorizerDown)
+                    if (!isAuthorizerDown)
                     {
-                        bool isLoginSentToService = default;
-                        try
+                        if (isAuthorized)
                         {
-                            isLoginSentToService = await ServiceTransmitter.ConnectAndSendLoginToService(_localUserTechnicalData);
-                        }
-                        catch
-                        {
-                            // timeout notification exception, handled on the lower level
-                        }
-                        if (isLoginSentToService)
-                        {
-                            var result = ServiceTransmitter.GetResponseData();
-                            FullUserServiceData = result.userData;
-                            var memberList = result.memberList;
+                            bool isLoginSentToService = default;
+                            try
+                            {
+                                isLoginSentToService = await ServiceTransmitter.ConnectAndSendLoginToService(_localUserTechnicalData);
+                            }
+                            catch
+                            {
+                                // timeout notification exception, handled on the lower level
+                            }
+                            if (isLoginSentToService)
+                            {
+                                var result = ServiceTransmitter.GetResponseData();
+                                FullUserServiceData = result.userData;
+                                var memberList = result.memberList;
 
-                            await WpfWindowsManager.MoveFromLoginToChat(FullUserServiceData, memberList, ServiceTransmitter);
+                                await WpfWindowsManager.MoveFromLoginToChat(FullUserServiceData, memberList, ServiceTransmitter);
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("You have entered incorrect login or password.", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("Server is down. Please, concider connecting later.", "Server down", MessageBoxButton.OK, MessageBoxImage.Information);
+                        MessageBox.Show("Server is down. Concider connecting later.", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
                         RenewTransmitter();
                     }
                 }
@@ -87,7 +94,7 @@ namespace MessengerClient.ViewModel.ClientStartupWindow
             }
             else
             {
-                MessageBox.Show("Both login and password fields are required to proceed.", "Please, check your input", MessageBoxButton.OK, MessageBoxImage.Hand);
+                MessageBox.Show("Both login and password fields are required to proceed.", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
         }

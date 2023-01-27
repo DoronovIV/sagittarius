@@ -73,7 +73,7 @@ namespace AuthorizationServiceProject.Net
         /// <br />
         /// Запустить цикл прослушивания входящий подключений.
         /// </summary>
-        public void ListenToClientConnections()
+        public async Task ListenToClientConnections()
         {
             try
             {
@@ -81,24 +81,20 @@ namespace AuthorizationServiceProject.Net
 
                 ServiceReciever newClient;
 
-                clientListener.Start();
+                await TryConnectToMessengerAsync();
 
-                try
-                {
-                    if (!messengerServiceSocket.Connected) messengerServiceSocket.Connect(NetworkConfigurator.AuthorizerMessengerEndPoint);
-                }
-                catch (Exception ex)
-                {
-                    AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [yellow]Messenger service is currently down.[/]\n"));
-                }
+                clientListener.Start();
 
                 while (true)
                 {
-                    newClient = new(clientListener.AcceptTcpClient(), this);
+                    var clientSocket = await clientListener.AcceptTcpClientAsync();
+
+                    newClient = new(clientSocket, this);
 
                     UserList.Add(newClient);
 
-                    newClient.ProcessAsync();
+                    // each user is handled in their own task
+                    Task.Run(() => newClient.ProcessAsync());
                 }
             }
             catch (Exception ex) 
@@ -141,13 +137,14 @@ namespace AuthorizationServiceProject.Net
         /// <br />
         /// Отправить клиенту ответ в виде результата регистрации клиента.
         /// </summary>
-        public void SendClientResponse(ServiceReciever client, bool checkResult)
+        public async Task SendClientResponse(ServiceReciever client, bool checkResult)
         {
+            await TryConnectToMessengerAsync();
             PackageBuilder builder = new PackageBuilder();
             string package;
 
             // 'true' - access granted. else 'false'
-            if (checkResult) package = JsonMessageFactory.GetJsonMessageSimplified("Authorizer", "Client", "Granted");
+            if (checkResult && messengerServiceSocket.Connected) package = JsonMessageFactory.GetJsonMessageSimplified("Authorizer", "Client", "Granted");
             else package = JsonMessageFactory.GetJsonMessageSimplified("Authorizer", "Client", "Denied");
 
             builder.WriteJsonMessage(package);
@@ -162,27 +159,9 @@ namespace AuthorizationServiceProject.Net
         /// <br />
         /// Попытаться отправить логин пользователя на сервис сообщений.
         /// </summary>
-        public bool TrySendLoginToService(ServiceReciever user)
+        public async Task<bool> TrySendLoginToService(ServiceReciever user)
         {
-            try
-            {
-                if (!messengerServiceSocket.Connected) messengerServiceSocket.Connect(NetworkConfigurator.AuthorizerMessengerEndPoint);
-            }
-            catch (Exception ex)
-            {
-                AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [yellow]Messenger service was down. Trying to renew connection...[/]\n"));
-                try
-                {
-                    messengerServiceSocket = new();
-                    messengerServiceSocket.Connect(NetworkConfigurator.AuthorizerMessengerEndPoint);
-                    AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [yellow on green]Connection renewed.[/]\n"));
-                }
-                catch (Exception inex)
-                {
-                    AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [white on red]Messenger service is still down. Client data was not sent.[/]\n"));
-                    return false;
-                }
-            }
+            await TryConnectToMessengerAsync();
 
             if (messengerServiceSocket.Connected)
             {
@@ -197,10 +176,6 @@ namespace AuthorizationServiceProject.Net
 
 
 
-
-
-
-
         /// <summary>
         /// Try add new user to the database.
         /// <br />
@@ -211,22 +186,32 @@ namespace AuthorizationServiceProject.Net
         /// <br />
         /// "True" - если процесс прошёл успешно, если пользователь уже есть в базе -  "false".
         /// </returns>
-        public bool TryAddNewUser(UserClientTechnicalDTO user)
+        public async Task<bool> TryAddNewUser(UserClientTechnicalDTO user)
         {
-            bool doesContain = IsUserPresentInDatabase(user);
-            using (AuthorizationDatabaseContext context = new())
-            {
-                if (!doesContain)
-                {
-                    UserModel newUser = new();
-                    newUser.Login = user.Login;
-                    newUser.PasswordHash = user.Password;
-                    context.Users.Add(newUser);
+            await TryConnectToMessengerAsync();
 
-                    context.SaveChanges();
+            if (messengerServiceSocket.Connected)
+            {
+                bool doesContain = IsUserPresentInDatabase(user);
+                using (AuthorizationDatabaseContext context = new())
+                {
+                    if (!doesContain)
+                    {
+                        UserModel newUser = new();
+                        newUser.Login = user.Login;
+                        newUser.PasswordHash = user.Password;
+                        context.Users.Add(newUser);
+
+                        context.SaveChanges();
+                    }
                 }
+                return !doesContain;
             }
-            return !doesContain;
+            else
+            {
+                AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} Client registration failed due to negative [red on black]Messenger[/] status.\n"));
+                return false;
+            }
         }
 
 
@@ -262,6 +247,40 @@ namespace AuthorizationServiceProject.Net
 
         #endregion API - public Contract
 
+
+
+
+
+        #region LOGIC
+
+
+
+        /// <summary>
+        /// Try renew connection to the messenger.
+        /// <br />
+        /// Попытаться обновить подключение к мессенжеру.
+        /// </summary>
+        private async Task TryConnectToMessengerAsync()
+        {
+            try
+            {
+                if (!messengerServiceSocket.Connected)
+                {
+                    AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [red on black]Messenger[/] [yellow on black]server is down. Renewing connection...[/]\n"));
+                    messengerServiceSocket = new();
+                    await messengerServiceSocket.ConnectAsync(NetworkConfigurator.AuthorizerMessengerEndPoint, new CancellationTokenSource(NetworkConfigurator.ConnectionTimeoutValue).Token);
+                    AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [yellow on green]Connection renewed.[/]\n"));
+                }
+            }
+            catch (Exception ex)
+            {
+                AnsiConsole.Write(new Markup($"{ConsoleServiceStyleCommon.GetCurrentTime()} [yellow on red]Failed to renew Messenger conection.[/]\n"));
+            }
+        }
+
+
+
+        #endregion LOGIC
 
 
 

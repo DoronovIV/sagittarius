@@ -70,6 +70,8 @@ namespace MessengerService.Controls
         /// </summary>
         public async Task Start()
         {
+            Console.Title = "Messenger";
+            Console.CursorVisible = default;
             await Run();
         }
 

@@ -63,9 +63,11 @@ namespace AuthorizationServiceProject.Controls
         /// <br />
         /// Зациклить приватный метод "Run".
         /// </summary>
-        public void Start()
+        public async Task Start()
         {
-            Run();
+            Console.Title = "Authorizer";
+            Console.CursorVisible = default;
+            await Run();
         }
 
 
@@ -85,10 +87,10 @@ namespace AuthorizationServiceProject.Controls
         /// <br />
         /// Запустить приложение.
         /// </summary>
-        private void Run()
+        private async Task Run()
         {
             ServiceController controller = new();
-            controller.ListenToClientConnections();
+            await controller.ListenToClientConnections();
         }
 
 

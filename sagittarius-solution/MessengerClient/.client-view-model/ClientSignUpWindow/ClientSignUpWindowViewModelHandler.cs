@@ -30,22 +30,22 @@ namespace MessengerClient.ViewModel.ClientSignUpWindow
                         }
                         else
                         {
-                            MessageBox.Show($"This login is already present on server.", "", MessageBoxButton.OK, MessageBoxImage.Hand);
+                            MessageBox.Show($"Something went wrong when attempting to register.\nTry using another data, or check out the servers status at our official web-resouce.", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
                         }
                     }
                     else
                     {
-                        MessageBox.Show($"Passwords do not match.", "Check your input", MessageBoxButton.OK, MessageBoxImage.Hand);
+                        MessageBox.Show($"Passwords do not match.", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
                     }
                 }
                 else
                 {
-                    MessageBox.Show($"All fields are required to proceed.", "Check your input", MessageBoxButton.OK, MessageBoxImage.Hand);
+                    MessageBox.Show($"All fields are required to proceed.", "Notification", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Service is down. Consider register later.", "Unable to sign up", MessageBoxButton.OK, MessageBoxImage.Hand);
+                MessageBox.Show($"Server is down. Consider register later.", "Notification", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
