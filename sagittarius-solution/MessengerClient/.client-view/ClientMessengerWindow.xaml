@@ -180,7 +180,7 @@
                     Background="Transparent"
                     SelectedItem="{Binding SelectedMessage}"
                     ItemsSource="{Binding Path=ActiveChat.MessageList}" 
-                    Margin="0,5,5,50" BorderBrush="{x:Null}" 
+                    Margin="0,5,0,50" BorderBrush="{x:Null}" 
                     Foreground="#FF0A0A0A" FontFamily="Cascadia Code"
              >
 
@@ -190,9 +190,10 @@
 
                 <ListView.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal" Margin="2">
+                        <StackPanel Orientation="Horizontal" Margin="2,2,0,2">
                             <TextBlock 
-                                TextWrapping="Wrap" Padding="2" 
+                                HorizontalAlignment="Stretch"
+                                TextWrapping="Wrap" Padding="2,2,0,2" 
                                 Text="{Binding .}"                               
                                 MaxWidth="{Binding RelativeSource=
                                 {RelativeSource AncestorType = {x:Type ListView}}, Path=ActualWidth}" 
