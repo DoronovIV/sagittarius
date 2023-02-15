@@ -63,13 +63,24 @@ namespace MessengerService.Model.Context
 
 
         /// <summary>
+        /// Check existance of the d/b.
+        /// <br />
+        /// Проверить наличие б/д.
+        /// </summary>  
+        public bool CheckDatabase()
+        {
+            return Database.EnsureCreated();
+        }
+
+
+
+        /// <summary>
         /// Default constructor;
         /// <br />
         /// Конструктор по умолчанию;
         /// </summary>
         public MessengerDatabaseContext()
         {
-            Database.EnsureCreated();
         }
 
 
@@ -85,7 +96,6 @@ namespace MessengerService.Model.Context
         /// </param>
         public MessengerDatabaseContext(DbContextOptions<MessengerDatabaseContext> options) : base(options)
         {
-            Database.EnsureCreated();
         }
 
 
