@@ -93,70 +93,60 @@ namespace MessengerService.Datalink
         /// <br />
         /// Прослушивать клиентов;
         /// </summary>
-        private void Process()
-        {
-            object debugInfo = null;
-            while (true)
-            {
-
-                try
-                {
-                    var opCode = packetReader.ReadByte();
-                    switch ((EnumAssets)opCode)
-                    {
-                        // text message recieved;
-                        case EnumAssets.MessageReceipt:
-
-                            var textMessage = packetReader.ReadJsonMessage();
-                            MessageRecievedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessage));
-                            AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageReceiptStyle(JsonMessageFactory.GetUnserializedPackage(textMessage))));
-
-                            break;
-
-                        // text message deletion;
-                        case EnumAssets.MessageDeletionRequest:
-
-                            var textMessageForDeletion = packetReader.ReadJsonMessage();
-                            debugInfo = textMessageForDeletion;
-                            try
-                            {
-                                MessageDeletedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion));
-                                AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageDeletionStyle(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion))));
-                            }
-                            catch (InvalidDataException e)
-                            {
-                                AnsiConsole.Write(new Markup($"[black on white][[{StringAssets.TimeSecondFormat}]] [/][red on white]Error 501. {e.GetType().Name} on message deletion.[/]"));
-                            }
-
-                            break;
-
-
-                        default:
-
-                            break;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    var errorState = debugInfo;
-                    AnsiConsole.Write(new Markup(ConsoleServiceStyleCommon.GetUserDisconnection(CurrentUser.Login)));
-                    UserDisconnected.Invoke(CurrentUser);
-                    ClientSocket.Close(); // if this block is invoked, we can see that the client has disconnected and then we need to invoke the disconnection procedure;
-                    break;
-                }
-            }
-        }
-
-
-
-        /// <summary>
-        /// Put 'Process' method in a separate task.
-        /// <br />
-        /// Положить метод "Process" в отдельный task.
-        /// </summary>
         public async Task ProcessAsync()
         {
-            await Task.Run(() => Process());
+            Task.Run(() => {
+                object debugInfo = null;
+                while (true)
+                {
+
+                    try
+                    {
+                        var opCode = packetReader.ReadByte();
+                        switch ((EnumAssets)opCode)
+                        {
+                            // text message recieved;
+                            case EnumAssets.MessageReceipt:
+
+                                var textMessage = packetReader.ReadJsonMessage();
+                                MessageRecievedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessage));
+                                AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageReceiptStyle(JsonMessageFactory.GetUnserializedPackage(textMessage))));
+
+                                break;
+
+                            // text message deletion;
+                            case EnumAssets.MessageDeletionRequest:
+
+                                var textMessageForDeletion = packetReader.ReadJsonMessage();
+                                debugInfo = textMessageForDeletion;
+                                try
+                                {
+                                    MessageDeletedEvent.Invoke(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion));
+                                    AnsiConsole.Write(new Markup(ConsoleServiceStyle.GetClientMessageDeletionStyle(JsonMessageFactory.GetUnserializedPackage(textMessageForDeletion))));
+                                }
+                                catch (InvalidDataException e)
+                                {
+                                    AnsiConsole.Write(new Markup($"[black on white][[{StringAssets.TimeSecondFormat}]] [/][red on white]Error 501. {e.GetType().Name} on message deletion.[/]"));
+                                }
+
+                                break;
+
+
+                            default:
+
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        var errorState = debugInfo;
+                        AnsiConsole.Write(new Markup(ConsoleServiceStyleCommon.GetUserDisconnection(CurrentUser.Login)));
+                        UserDisconnected.Invoke(CurrentUser);
+                        ClientSocket.Close(); // if this block is invoked, we can see that the client has disconnected and then we need to invoke the disconnection procedure;
+                        break;
+                    }
+                }
+            });
         }
 
 
